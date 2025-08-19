@@ -17,6 +17,29 @@ composer require darvis/manta-news
 php artisan manta-news:install
 ```
 
+### Seeding
+
+Na installatie kun je voorbeelddata toevoegen:
+
+```bash
+# Basis seeding - voegt alleen nieuwsartikelen toe
+php artisan manta-news:seed
+
+# Seeding met navigatie - voegt nieuwsartikelen EN navigatie-items toe
+php artisan manta-news:seed --with-navigation
+
+# Ververs alle data (verwijdert bestaande items eerst)
+php artisan manta-news:seed --fresh --with-navigation
+```
+
+**Navigatie integratie:**
+De `--with-navigation` optie voegt automatisch de volgende navigatie-items toe aan je CMS:
+
+- 📰 **Nieuws** - Beheer nieuwsartikelen (`news.list`)
+- 🏷️ **Nieuws Categorieën** - Beheer nieuwscategorieën (`news.news.cat.list`)
+
+Deze items verschijnen automatisch in je CMS navigatie na het seeden.
+
 ### Basic Usage
 
 ```php
@@ -42,6 +65,7 @@ For detailed documentation, please see the `/docs` directory:
 - 🗄️ **[Database Schema](docs/database.md)** - Complete database documentation
 - 🔧 **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
 - 🔌 **[API Documentation](docs/api.md)** - Programmatic usage and API endpoints
+- 🛠️ **[Artisan Commands](docs/commands.md)** - Available console commands and usage
 
 ## Requirements
 

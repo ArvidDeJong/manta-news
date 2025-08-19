@@ -47,6 +47,7 @@ class NewsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 \Darvis\MantaNews\Console\Commands\InstallCommand::class,
+                \Darvis\MantaNews\Console\Commands\SeedNewsCommand::class,
             ]);
         }
 

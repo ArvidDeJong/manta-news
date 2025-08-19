@@ -39,6 +39,7 @@ class NewsRead extends Component
 
     public function render()
     {
+
         return view('manta-cms::livewire.default.manta-default-read')->title($this->config['module_name']['single'] . ' bekijken');
     }
 }

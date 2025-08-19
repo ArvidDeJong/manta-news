@@ -12,8 +12,9 @@ trait NewsTrait
 {
     public function __construct()
     {
+        $this->route_prefix = 'news.';
         $this->route_name = 'news';
-        $this->route_list = route('news.list');
+        $this->route_list = route($this->route_prefix . $this->route_name . '.list');
         $settings = MantaModule::where('name', 'news')->first()->toArray();
 
         $this->config = $settings;

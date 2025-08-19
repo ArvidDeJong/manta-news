@@ -24,10 +24,13 @@ class NewscatList extends Component
 
     public function mount()
     {
+        $newsConfig = module_config('News');
+        $newsTitle = $newsConfig['module_name']['multiple'] ?? $newsConfig['title'] ?? 'Nieuws';
+
         $this->getBreadcrumb('list', [
             'parents' =>
             [
-                ['url' => route('news.list'), 'title' => module_config('News')['module_name']['multiple']]
+                ['url' => route('news.list'), 'title' => $newsTitle]
             ]
         ]);
         $this->sortBy = 'sort';
@@ -45,6 +48,6 @@ class NewscatList extends Component
         $obj = $this->applySorting($obj);
         $obj = $this->applySearch($obj);
         $items = $obj->paginate(50);
-        return view('livewire.manta.newscat.newscat-list', ['items' => $items])->title($this->config['module_name']['multiple']);
+        return view('manta-news::livewire.newscat.newscat-list', ['items' => $items])->title($this->config['module_name']['multiple']);
     }
 }

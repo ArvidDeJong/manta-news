@@ -1,8 +1,8 @@
 <flux:main container>
     <x-manta.breadcrumb :$breadcrumb />
-    <div class="flex mt-4">
+    <div class="mt-4 flex">
         <div class="flex-grow">
-            <x-manta.buttons.large type="add" :href="route($this->route_name . '.create')" />
+            <x-manta.buttons.large type="add" :href="route($this->route_prefix . $this->route_name . '.create')" />
 
             @if (isset($fields['newscat']) && $fields['newscat']['active'])
                 <x-manta.buttons.large type="list" :href="route('news.cat.list')"
@@ -65,7 +65,8 @@
                     @endif
 
                     <flux:table.cell>
-                        <flux:button size="sm" href="{{ route($this->route_name . '.read', $item) }}"
+                        <flux:button size="sm"
+                            href="{{ route($this->route_prefix . $this->route_name . '.read', $item) }}"
                             icon="eye" />
                         <x-manta.tables.delete-modal :item="$item" />
                     </flux:table.cell>

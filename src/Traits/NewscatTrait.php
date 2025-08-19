@@ -12,12 +12,12 @@ trait NewscatTrait
 {
     public function __construct()
     {
+        $this->route_prefix = 'news.';
         $this->route_name = 'newscat';
         $this->route_list = route('news.cat.list');
         $settings = MantaModule::where('name', 'newscat')->first()->toArray();
 
         $this->config = $settings;
-
         $this->fields = $settings['fields'];
         $this->tab_title = isset($settings['tab_title']) ? $settings['tab_title'] : null;
         $this->moduleClass = 'Darvis\MantaNews\Models\Newscat';
