@@ -1,19 +1,23 @@
 <flux:main container>
+
     <x-manta.breadcrumb :$breadcrumb />
+
     <div class="mt-4 flex">
         <div class="flex-grow">
-            <x-manta.buttons.large type="add" :href="route($this->route_prefix . $this->route_name . '.create')" />
+            <x-manta.buttons.large type="add" :href="route($this->module_routes['create'])" />
 
-            @if (isset($fields['newscat']) && $fields['newscat']['active'])
-                <x-manta.buttons.large type="list" :href="route('news.cat.list')"
+            {{-- @if (isset($fields['newscat']) && $fields['newscat']['active'])
+                <x-manta.buttons.large type="list" :href="route('news.newscat.list')"
                     title="{{ $config['module_name']['single'] }} categorieën" />
-            @endif
+            @endif --}}
         </div>
         <div class="w-1/5">
             <x-manta.input.search />
         </div>
     </div>
+
     <x-manta.tables.tabs :$tablistShow :$trashed />
+
     <flux:table :paginate="$items">
         <flux:table.columns>
             @if ($this->fields['uploads']['active'])
@@ -65,8 +69,7 @@
                     @endif
 
                     <flux:table.cell>
-                        <flux:button size="sm"
-                            href="{{ route($this->route_prefix . $this->route_name . '.read', $item) }}"
+                        <flux:button size="sm" href="{{ route($this->module_routes['read'], $item) }}"
                             icon="eye" />
                         <x-manta.tables.delete-modal :item="$item" />
                     </flux:table.cell>

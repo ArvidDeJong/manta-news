@@ -1,8 +1,8 @@
 <flux:main container>
     <x-manta.breadcrumb :$breadcrumb />
-    <div class="flex mt-4">
+    <div class="mt-4 flex">
         <div class="flex-grow">
-            <x-manta.buttons.large type="add" :href="route('news.cat.create')" />
+            <x-manta.buttons.large type="add" :href="route($this->module_routes['create'])" />
         </div>
         <div class="w-1/5">
             <x-manta.input.search />

@@ -7,20 +7,28 @@ use Darvis\MantaNews\Models\Newscat;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Livewire\Attributes\Locked;
 use Manta\FluxCMS\Models\MantaModule;
+use Manta\FluxCMS\Services\ModuleSettingsService;
 
 trait NewsTrait
 {
     public function __construct()
     {
-        $this->route_prefix = 'news.';
-        $this->route_name = 'news';
-        $this->route_list = route($this->route_prefix . $this->route_name . '.list');
-        $settings = MantaModule::where('name', 'news')->first()->toArray();
+        $this->module_routes = [
+            'name' => 'news',
+            'list' => 'news.list',
+            'create' => 'news.create',
+            'update' => 'news.update',
+            'read' => 'news.read',
+            'upload' => 'news.upload',
+            'settings' => 'news.settings',
+            'maps' => null,
+        ];
 
+        $settings = ModuleSettingsService::ensureModuleSettings('news', 'darvis/manta-news');
         $this->config = $settings;
 
-        $this->fields = $settings['fields'];
-        $this->tab_title = isset($settings['tab_title']) ? $settings['tab_title'] : null;
+        $this->fields = $settings['fields'] ?? [];
+        $this->tab_title = $settings['tab_title'] ?? null;
         $this->moduleClass = 'Darvis\MantaNews\Models\News';
     }
 

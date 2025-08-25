@@ -7,19 +7,28 @@ use Livewire\Attributes\Locked;
 use Manta\FluxCMS\Models\MantaModule;
 use Darvis\MantaNews\Models\News;
 use Darvis\MantaNews\Models\Newscat;
+use Manta\FluxCMS\Services\ModuleSettingsService;
 
 trait NewscatTrait
 {
     public function __construct()
     {
-        $this->route_prefix = 'news.';
-        $this->route_name = 'newscat';
-        $this->route_list = route('news.cat.list');
-        $settings = MantaModule::where('name', 'newscat')->first()->toArray();
+        $this->module_routes = [
+            'name' => 'newscat',
+            'list' => 'news.cat.list',
+            'create' => 'news.cat.create',
+            'update' => 'news.cat.update',
+            'read' => 'news.cat.read',
+            'upload' => 'news.cat.upload',
+            'settings' => 'news.cat.settings',
+            'maps' => null,
+        ];
 
+        $settings = ModuleSettingsService::ensureModuleSettings('newscat', 'darvis/manta-newscat');
         $this->config = $settings;
-        $this->fields = $settings['fields'];
-        $this->tab_title = isset($settings['tab_title']) ? $settings['tab_title'] : null;
+
+        $this->fields = $settings['fields'] ?? [];
+        $this->tab_title = $settings['tab_title'] ?? null;
         $this->moduleClass = 'Darvis\MantaNews\Models\Newscat';
     }
 
