@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 use Manta\FluxCMS\Models\Option;
 use Livewire\Attributes\Layout;
+use Manta\FluxCMS\Models\Upload;
 use Manta\FluxCMS\Services\MantaOpenai;
 
 #[Layout('manta-cms::layouts.app')]
@@ -53,14 +54,13 @@ class NewsCreate extends Component
         $this->getBreadcrumb('create');
 
         $this->openaiSubject = 'Maak een nieuwsbericht over: ';
-        $this->openaiDescription = 'Donald Duck die gaat winkelen in New York';
     }
 
     public function render()
     {
-        return view('manta-cms::livewire.default.manta-default-create')->title($this->config['module_name']['single'] . ' toevoegen');
+        $uploads = Upload::where('model_id', 'openai')->get();
+        return view('manta-cms::livewire.default.manta-default-create', compact('uploads'))->title($this->config['module_name']['single'] . ' toevoegen');
     }
-
 
     public function save()
     {
@@ -101,6 +101,9 @@ class NewsCreate extends Component
     {
         $ai = app(MantaOpenai::class);
 
+
+        // geeft een directe URL terug naar de afbeelding
+
         $result = $ai->generate(
             $this->openaiSubject . ' ' . $this->openaiDescription,
             [
@@ -113,5 +116,14 @@ class NewsCreate extends Component
         $this->title = $result['title'];
         $this->excerpt = $result['excerpt'];
         $this->content = $result['content'];
+
+        if ($this->openaiImageGenerate) {
+            $ai->generateImage(
+                $this->openaiSubject . ' ' . $this->openaiDescription,
+                News::class,
+                'openai',
+                '1024x1024'
+            );
+        }
     }
 }

@@ -30,6 +30,7 @@ trait NewsTrait
         $this->fields = $settings['fields'] ?? [];
         $this->tab_title = $settings['tab_title'] ?? null;
         $this->moduleClass = 'Darvis\MantaNews\Models\News';
+        $this->openaiImagePossible = true;
     }
 
     // * Model items
