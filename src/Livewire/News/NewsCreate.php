@@ -4,22 +4,15 @@ namespace Darvis\MantaNews\Livewire\News;
 
 use Darvis\MantaNews\Models\News;
 use Darvis\MantaNews\Models\Newscatjoin;
-use Darvis\MantaNews\Services\BlogWriterService;
 use Darvis\MantaNews\Traits\NewsTrait;
 use Manta\FluxCMS\Traits\MantaTrait;
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
-use Flux\Flux;
 use Manta\FluxCMS\Models\Option;
-use Manta\FluxCMS\Services\Openai;
 use Livewire\Attributes\Layout;
-use Manta\FluxCMS\Services\SeoOptimizationService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use OpenAI\Exceptions\ErrorException as OpenAiError; // uit de client
-
+use Manta\FluxCMS\Services\MantaOpenai;
 
 #[Layout('manta-cms::layouts.app')]
 class NewsCreate extends Component
@@ -60,6 +53,7 @@ class NewsCreate extends Component
         $this->getBreadcrumb('create');
 
         $this->openaiSubject = 'Maak een nieuwsbericht over: ';
+        $this->openaiDescription = 'Donald Duck die gaat winkelen in New York';
     }
 
     public function render()
@@ -103,34 +97,21 @@ class NewsCreate extends Component
         return $this->redirect(NewsList::class);
     }
 
-
-
     public function getOpenaiResult()
     {
-        $svc = app(\Darvis\MantaNews\Services\BlogWriterService::class);
+        $ai = app(MantaOpenai::class);
 
-        $result = $svc->generate([
-            'topic'   => $this->openaiSubject,
-            'audience' => $this->openaiDescription,
-            'lang'    => $this->locale ?? 'nl',
-        ]);
+        $result = $ai->generate(
+            $this->openaiSubject . ' ' . $this->openaiDescription,
+            [
+                'title' => 'Korte titel',
+                'excerpt' => 'Samenvatting in 1 zin',
+                'content' => 'Uitgebreide marketingtekst (ca. 150 woorden)',
+            ]
+        );
 
-        $this->title           = $result['title'];
-        $this->title_2         = $result['subtitle'];
-        $this->title_3         = '';
-        $this->slug            = \Illuminate\Support\Str::of($result['title'])->slug('-');
-        $this->seo_title       = $result['title'];
-        $this->seo_description = strip_tags($result['excerpt']);
-        $this->summary         = $result['excerpt'];
-        $this->excerpt         = $result['excerpt'];
-        $this->content         = $result['content'];
-
-
-        // Optioneel: direct ook een afbeelding opslaan
-        if (!empty($result['image_prompt'])) {
-            $img = $svc->generateImageToStorage($result['image_prompt'], '1024x1024');
-
-            $this->openaiImage = $img['url']; // in Livewire alleen de URL bijhouden
-        }
+        $this->title = $result['title'];
+        $this->excerpt = $result['excerpt'];
+        $this->content = $result['content'];
     }
 }
