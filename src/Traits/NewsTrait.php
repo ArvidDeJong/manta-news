@@ -4,9 +4,11 @@ namespace Darvis\MantaNews\Traits;
 
 use Darvis\MantaNews\Models\News;
 use Darvis\MantaNews\Models\Newscat;
+use Flux\Flux;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Livewire\Attributes\Locked;
 use Manta\FluxCMS\Models\MantaModule;
+use Manta\FluxCMS\Services\MantaOpenai;
 use Manta\FluxCMS\Services\ModuleSettingsService;
 
 trait NewsTrait
@@ -109,5 +111,36 @@ trait NewsTrait
         }
 
         return $return;
+    }
+
+    public function getOpenaiResult()
+    {
+        Flux::modals()->close();
+        $ai = app(MantaOpenai::class);
+
+
+        // geeft een directe URL terug naar de afbeelding
+
+        $result = $ai->generate(
+            $this->openaiSubject . ' ' . $this->openaiDescription,
+            [
+                'title' => 'Korte titel',
+                'excerpt' => 'Samenvatting',
+                'content' => 'Uitgebreide marketingtekst in HTML (ca. 150 woorden)',
+            ]
+        );
+
+        $this->title = $result['title'];
+        $this->excerpt = $result['excerpt'];
+        $this->content = $result['content'];
+
+        if ($this->openaiImageGenerate) {
+            $ai->generateImage(
+                $this->openaiSubject . ' ' . $this->openaiDescription,
+                News::class,
+                'openai',
+                '1024x1024'
+            );
+        }
     }
 }

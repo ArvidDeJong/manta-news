@@ -13,7 +13,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'manta-news:install 
+    protected $signature = 'manta-news:install
                             {--force : Overwrite existing files}
                             {--migrate : Run migrations after installation}';
 
@@ -39,14 +39,15 @@ class InstallCommand extends Command
         $this->publishMigrations();
 
         // Step 3: Run migrations if requested
-        if ($this->option('migrate')) {
-            $this->runMigrations();
-        }
+        $this->runMigrations();
 
-        // Step 4: Create default configuration
+        // Step 4: Import module settings
+        $this->importModuleSettings();
+
+        // Step 5: Create default configuration
         $this->createDefaultConfiguration();
 
-        // Step 5: Show completion message
+        // Step 6: Show completion message
         $this->showCompletionMessage();
 
         return self::SUCCESS;
@@ -106,6 +107,26 @@ class InstallCommand extends Command
             $this->line('   ✅ Migrations completed successfully');
         } else {
             $this->warn('   ⚠️  Migrations skipped. Run "php artisan migrate" manually later.');
+        }
+    }
+
+    /**
+     * Import module settings
+     */
+    protected function importModuleSettings(): void
+    {
+        $this->info('📋 Importing module settings...');
+
+        try {
+            Artisan::call('manta:import-module-settings', [
+                'package' => 'darvis/manta-news',
+                '--all' => true
+            ]);
+
+            $this->line('   ✅ Module settings imported successfully');
+        } catch (\Exception $e) {
+            $this->warn('   ⚠️  Module settings import failed: ' . $e->getMessage());
+            $this->warn('   ⚠️  You can run this manually: php artisan manta:import-module-settings darvis/manta-news --all');
         }
     }
 

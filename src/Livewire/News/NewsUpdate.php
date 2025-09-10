@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Livewire\Component;
 use Darvis\MantaNews\Traits\NewsTrait;
 use Livewire\Attributes\Layout;
+use Manta\FluxCMS\Models\Upload;
 
 #[Layout('manta-cms::layouts.app')]
 class NewsUpdate extends Component
@@ -56,6 +57,7 @@ class NewsUpdate extends Component
 
     public function render()
     {
+
         return view('manta-cms::livewire.default.manta-default-update')->title($this->config['module_name']['single'] . ' aanpassen');
     }
 
@@ -91,6 +93,10 @@ class NewsUpdate extends Component
             }
         }
         Newscatjoin::where('news_id', $this->id)->whereNotIn('id', $ids)->delete();
+
+        if ($this->openaiImageAdd) {
+            Upload::where('model_id', 'openai')->update(['model_id' => $this->id, 'model' => News::class]);
+        }
 
         Flux::toast('Opgeslagen', duration: 1000, variant: 'success');
     }

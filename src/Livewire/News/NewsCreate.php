@@ -39,7 +39,7 @@ class NewsCreate extends Component
 
         $this->author = auth('staff')->user()->name;
 
-        if (class_exists(Faker::class) && env('APP_ENV') == 'local') {
+        if (class_exists(Faker::class) && env('USE_FAKER') == true) {
             $faker = Faker::create('NL_nl');
             $this->title = $faker->sentence(4);
             $this->title_2 = $faker->sentence(4);
@@ -58,8 +58,8 @@ class NewsCreate extends Component
 
     public function render()
     {
-        $uploads = Upload::where('model_id', 'openai')->get();
-        return view('manta-cms::livewire.default.manta-default-create', compact('uploads'))->title($this->config['module_name']['single'] . ' toevoegen');
+
+        return view('manta-cms::livewire.default.manta-default-create')->title($this->config['module_name']['single'] . ' toevoegen');
     }
 
     public function save()
@@ -95,35 +95,5 @@ class NewsCreate extends Component
         }
 
         return $this->redirect(NewsList::class);
-    }
-
-    public function getOpenaiResult()
-    {
-        $ai = app(MantaOpenai::class);
-
-
-        // geeft een directe URL terug naar de afbeelding
-
-        $result = $ai->generate(
-            $this->openaiSubject . ' ' . $this->openaiDescription,
-            [
-                'title' => 'Korte titel',
-                'excerpt' => 'Samenvatting in 1 zin',
-                'content' => 'Uitgebreide marketingtekst (ca. 150 woorden)',
-            ]
-        );
-
-        $this->title = $result['title'];
-        $this->excerpt = $result['excerpt'];
-        $this->content = $result['content'];
-
-        if ($this->openaiImageGenerate) {
-            $ai->generateImage(
-                $this->openaiSubject . ' ' . $this->openaiDescription,
-                News::class,
-                'openai',
-                '1024x1024'
-            );
-        }
     }
 }

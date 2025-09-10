@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2025-09-10
+
+### Added
+
+- Automatic module settings import during installation process
+- OpenAI functionality moved to reusable NewsTrait for better code organization
+- Enhanced upload handling for OpenAI generated images in update process
+
+### Changed
+
+- Faker usage now controlled via USE_FAKER environment variable instead of APP_ENV
+- OpenAI image generation logic centralized in NewsTrait for consistency
+- Install command now automatically imports module settings
+
+### Removed
+
+- Version number removed from composer.json (following Laravel package best practices)
+- Redundant OpenAI methods removed from NewsCreate component
+
 ## [1.1.1] - 2025-08-27
 
 ### Added

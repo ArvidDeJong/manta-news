@@ -1,21 +1,15 @@
 <flux:main container>
-
     <x-manta.breadcrumb :$breadcrumb />
-
-    <div class="mt-4 flex">
-        <div class="flex-grow">
-            <x-manta.buttons.large type="add" :href="route($this->module_routes['create'])" />
-
-            {{-- @if (isset($fields['newscat']) && $fields['newscat']['active'])
-                <x-manta.buttons.large type="list" :href="route('news.newscat.list')"
-                    title="{{ $config['module_name']['single'] }} categorieën" />
-            @endif --}}
+    <div class="mb-8 mt-4 flex items-center justify-between">
+        <div>
+            <flux:button icon="plus" href="{{ route($this->module_routes['create']) }}">
+                Toevoegen
+            </flux:button>
         </div>
-        <div class="w-1/5">
-            <x-manta.input.search />
+        <div style="width: 300px">
+            <flux:input type="search" wire:model="search" placeholder="Zoeken..." />
         </div>
     </div>
-
     <x-manta.tables.tabs :$tablistShow :$trashed />
 
     <flux:table :paginate="$items">
